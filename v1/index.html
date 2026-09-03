@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Trivia de Soy Luna: preguntas, patines y desafíos contra el tiempo.">
+  <title>Preguntas Soy Luna | Trivia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Preguntas Soy Luna, inicio">
+        <span class="brand-star">★</span>
+        <span><strong>Preguntas</strong><small>SOY LUNA</small></span>
+      </a>
+      <div class="topbar-note">TRIVIA SOBRE RUEDAS</div>
+    </header>
+
+    <section class="screen setup-screen is-active" id="inicio" aria-labelledby="setup-title">
+      <div class="intro-copy">
+        <p class="eyebrow">DESAFÍO DE FANS</p>
+        <h1 id="setup-title">¿Cuánto sabés de <em>Soy Luna</em>?</h1>
+        <p class="intro-text">Poné a prueba tus recuerdos de Jam & Roller, sus canciones y sus personajes. Respondé rápido: ¡la pista te está esperando!</p>
+        <div class="track-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      </div>
+
+      <form class="setup-panel" id="setup-form">
+        <div class="panel-heading"><span class="panel-number">01</span><div><p class="eyebrow">PREPARAR ACTIVIDAD</p><h2>Configurá tu partida</h2></div></div>
+        <label for="player-name">Nombre del participante<input id="player-name" name="playerName" type="text" maxlength="24" placeholder="Escribí tu nombre" autocomplete="name" required></label>
+        <div class="form-grid">
+          <label for="question-count">Cantidad de preguntas<select id="question-count" name="questionCount"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20" selected>20</option></select></label>
+          <fieldset><legend>Tiempo disponible</legend><div class="time-fields"><label for="minutes"><span class="sr-only">Minutos</span><input id="minutes" type="number" min="0" max="59" value="5" aria-label="Minutos"></label><span>:</span><label for="seconds"><span class="sr-only">Segundos</span><input id="seconds" type="number" min="0" max="59" value="0" aria-label="Segundos"></label></div></fieldset>
+        </div>
+        <p class="rules"><strong>Reglas:</strong> una respuesta por pregunta. El juego termina al completar la partida, al agotarse el tiempo o al llegar a 3 respuestas incorrectas.</p>
+        <button class="primary-button" type="submit">Empezar trivia <span aria-hidden="true">→</span></button>
+      </form>
+    </section>
+
+    <section class="screen game-screen" id="game" aria-labelledby="question-title" hidden>
+      <div class="game-meta"><div><p class="eyebrow">PARTIDA DE <span id="player-label"></span></p><p class="progress-label">Pregunta <strong id="question-number">1</strong> de <strong id="question-total">20</strong></p></div><div class="timer" id="timer" aria-live="polite"><span aria-hidden="true">◷</span> <strong>05:00</strong></div></div>
+      <div class="progress-track"><span id="progress-bar"></span></div>
+      <div class="question-card"><span class="question-tag" id="category-label">JAM & ROLLER</span><h1 id="question-title">Pregunta</h1><div class="answers" id="answers"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div></div>
+      <div class="mistakes"><span>RESPUESTAS INCORRECTAS</span><div id="mistake-dots" aria-label="0 de 3 errores"></div></div>
+    </section>
+
+    <section class="screen result-screen" id="results" aria-labelledby="result-title" hidden>
+      <p class="eyebrow">PARTIDA TERMINADA</p><h1 id="result-title">¡Buen rodaje, <span id="result-name"></span>!</h1><p class="result-message" id="result-message"></p>
+      <div class="stats-grid"><div class="stat"><span>Tiempo utilizado</span><strong id="stat-time">00:00</strong></div><div class="stat"><span>Correctas</span><strong id="stat-correct">0</strong></div><div class="stat"><span>Incorrectas</span><strong id="stat-incorrect">0</strong></div><div class="stat highlight"><span>Tasa de correctas</span><strong id="stat-rate">0%</strong></div></div>
+      <div class="result-actions"><button class="primary-button" id="play-again" type="button">Jugar otra vez <span aria-hidden="true">↻</span></button><button class="text-button" id="back-to-setup" type="button">Cambiar configuración</button></div>
+    </section>
+
+    <section class="references" id="referencias"><div><p class="eyebrow">REFERENCIAS</p><h2>Para crear estas preguntas</h2></div><ol><li>Wikipedia contributors. (2026, 30 de agosto). <em>Soy Luna</em>. Wikipedia, la enciclopedia libre. <a href="https://es.wikipedia.org/wiki/Soy_Luna" target="_blank" rel="noopener">https://es.wikipedia.org/wiki/Soy_Luna</a></li><li>Disney Latino. (s. f.). <em>Soy Luna</em>. Disney Channel Latinoamérica. <a href="http://disneychannel.disneylatino.com/soy-luna" target="_blank" rel="noopener">http://disneychannel.disneylatino.com/soy-luna</a></li></ol><p class="source-note">Las preguntas se presentan con fines recreativos y educativos. La información puede actualizarse con nuevas publicaciones oficiales.</p></section>
+    <footer><span>Preguntas Soy Luna</span><span>Hecho para jugar en equipo</span></footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
