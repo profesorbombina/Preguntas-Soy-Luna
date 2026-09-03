@@ -9,6 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .intro-copy:after{content:'';display:block;width:180px;height:108px;margin-top:32px;background:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=500&q=80') center/cover;border:8px solid var(--paper);box-shadow:var(--shadow);transform:rotate(-4deg);border-radius:3px}
+    .extra-settings{align-items:end}.sound-toggle{display:flex!important;align-items:center;gap:9px;height:44px;color:var(--muted);cursor:pointer}.sound-toggle input{width:18px!important;accent-color:var(--pink)}
+    .ranking{max-width:480px;margin:48px auto 0;text-align:left;border-top:1px solid var(--line);padding-top:25px}.ranking h2{font:800 28px/1 'Baloo 2',sans-serif;margin:0 0 15px}.ranking ol{margin:0;padding-left:25px;color:var(--muted);font-size:14px;line-height:2}.ranking li::marker{color:var(--pink);font-weight:800}.ranking li strong{color:var(--ink)}
+  </style>
 </head>
 <body>
   <main class="site-shell">
@@ -32,9 +37,10 @@
         <div class="panel-heading"><span class="panel-number">01</span><div><p class="eyebrow">PREPARAR ACTIVIDAD</p><h2>Configurá tu partida</h2></div></div>
         <label for="player-name">Nombre del participante<input id="player-name" name="playerName" type="text" maxlength="24" placeholder="Escribí tu nombre" autocomplete="name" required></label>
         <div class="form-grid">
-          <label for="question-count">Cantidad de preguntas<select id="question-count" name="questionCount"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20" selected>20</option></select></label>
+          <label for="question-count">Cantidad de preguntas<select id="question-count" name="questionCount"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20" selected>20</option><option value="30">30</option></select></label>
           <fieldset><legend>Tiempo disponible</legend><div class="time-fields"><label for="minutes"><span class="sr-only">Minutos</span><input id="minutes" type="number" min="0" max="59" value="5" aria-label="Minutos"></label><span>:</span><label for="seconds"><span class="sr-only">Segundos</span><input id="seconds" type="number" min="0" max="59" value="0" aria-label="Segundos"></label></div></fieldset>
         </div>
+        <div class="form-grid extra-settings"><label for="difficulty">Nivel de dificultad<select id="difficulty"><option value="mixed" selected>Variado</option><option value="easy">Inicial</option><option value="hard">Experto</option></select></label><label class="sound-toggle" for="sound-enabled"><input id="sound-enabled" type="checkbox" checked><span>Activar sonidos</span></label></div>
         <p class="rules"><strong>Reglas:</strong> una respuesta por pregunta. El juego termina al completar la partida, al agotarse el tiempo o al llegar a 3 respuestas incorrectas.</p>
         <button class="primary-button" type="submit">Empezar trivia <span aria-hidden="true">→</span></button>
       </form>
@@ -51,6 +57,7 @@
       <p class="eyebrow">PARTIDA TERMINADA</p><h1 id="result-title">¡Buen rodaje, <span id="result-name"></span>!</h1><p class="result-message" id="result-message"></p>
       <div class="stats-grid"><div class="stat"><span>Tiempo utilizado</span><strong id="stat-time">00:00</strong></div><div class="stat"><span>Correctas</span><strong id="stat-correct">0</strong></div><div class="stat"><span>Incorrectas</span><strong id="stat-incorrect">0</strong></div><div class="stat highlight"><span>Tasa de correctas</span><strong id="stat-rate">0%</strong></div></div>
       <div class="result-actions"><button class="primary-button" id="play-again" type="button">Jugar otra vez <span aria-hidden="true">↻</span></button><button class="text-button" id="back-to-setup" type="button">Cambiar configuración</button></div>
+      <div class="ranking"><p class="eyebrow">RANKING EN ESTE NAVEGADOR</p><h2>Las mejores vueltas</h2><ol id="ranking-list"><li>Todavía no hay partidas registradas.</li></ol></div>
     </section>
 
     <section class="references" id="referencias"><div><p class="eyebrow">REFERENCIAS</p><h2>Para crear estas preguntas</h2></div><ol><li>Wikipedia contributors. (2026, 30 de agosto). <em>Soy Luna</em>. Wikipedia, la enciclopedia libre. <a href="https://es.wikipedia.org/wiki/Soy_Luna" target="_blank" rel="noopener">https://es.wikipedia.org/wiki/Soy_Luna</a></li><li>Disney Latino. (s. f.). <em>Soy Luna</em>. Disney Channel Latinoamérica. <a href="http://disneychannel.disneylatino.com/soy-luna" target="_blank" rel="noopener">http://disneychannel.disneylatino.com/soy-luna</a></li></ol><p class="source-note">Las preguntas se presentan con fines recreativos y educativos. La información puede actualizarse con nuevas publicaciones oficiales.</p></section>

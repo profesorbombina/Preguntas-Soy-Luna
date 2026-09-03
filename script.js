@@ -18,13 +18,38 @@ const questionBank = [
   { category: 'SERIE', question: '¿Qué tipo de producción es Soy Luna?', options: ['Serie musical juvenil', 'Documental deportivo', 'Concurso de talentos'], answer: 0 },
   { category: 'PATINAJE', question: '¿Qué objeto se vuelve parte central de la vida de Luna?', options: ['Una guitarra', 'Unos patines', 'Una cámara'], answer: 1 },
   { category: 'SERIE', question: '¿Quién creó Soy Luna?', options: ['Jorge Edelstein', 'Jorge Nisco', 'Ruggero Pasquarelli'], answer: 0 },
-  { category: 'MÚSICA', question: '¿Cuál de estos es un álbum de la banda sonora?', options: ['Modo Amar', 'Pista libre', 'Rodar sin parar'], answer: 0 }
+  { category: 'MÚSICA', question: '¿Cuál de estos es un álbum de la banda sonora?', options: ['Modo Amar', 'Pista libre', 'Rodar sin parar'], answer: 0 },
+  { category: 'PERSONAJES', question: '¿Cómo se llama la madre de Luna?', options: ['Mónica', 'Mora', 'Ana'], answer: 1 },
+  { category: 'PERSONAJES', question: '¿Qué instrumento toca Simón?', options: ['Guitarra', 'Batería', 'Violín'], answer: 0 },
+  { category: 'LUGARES', question: '¿Dónde trabaja Sharon?', options: ['Mansión Benson', 'Jam & Roller', 'Escuela Blake'], answer: 0 },
+  { category: 'PATINAJE', question: '¿Qué se usa para deslizarse en la pista?', options: ['Patines', 'Botas de fútbol', 'Bicicleta'], answer: 0 },
+  { category: 'MÚSICA', question: '¿Qué actividad artística acompaña al patinaje en la serie?', options: ['Canto', 'Pintura', 'Escultura'], answer: 0 },
+  { category: 'SERIE', question: '¿En qué canal se emitieron originalmente las primeras temporadas?', options: ['Disney Channel', 'Cartoon Network', 'Nickelodeon'], answer: 0 },
+  { category: 'PERSONAJES', question: '¿Qué personaje es conocido por su talento y sus videos?', options: ['Delfina', 'Pedro', 'Gastón'], answer: 0 },
+  { category: 'LUGARES', question: '¿En qué país se filmó principalmente la serie?', options: ['Argentina', 'México', 'España'], answer: 0 },
+  { category: 'SERIE', question: '¿Cuántos episodios tuvo la tercera temporada?', options: ['40', '60', '80'], answer: 1 },
+  { category: 'PERSONAJES', question: '¿Qué vínculo une a Luna y Simón?', options: ['Son mejores amigos', 'Son hermanos', 'Son rivales de pista'], answer: 0 }
 ];
 
-const state = { questions: [], current: 0, correct: 0, incorrect: 0, elapsed: 0, remaining: 0, interval: null, locked: false, config: {} };
+questionBank.forEach((question, index) => { question.difficulty = index % 3 === 0 ? 'easy' : index % 3 === 1 ? 'hard' : 'medium'; });
+
+const state = { questions: [], current: 0, correct: 0, incorrect: 0, elapsed: 0, remaining: 0, interval: null, locked: false, config: {}, audio: null };
 const $ = (id) => document.getElementById(id);
 const formatTime = (totalSeconds) => `${String(Math.floor(totalSeconds / 60)).padStart(2, '0')}:${String(totalSeconds % 60).padStart(2, '0')}`;
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
+
+function playTone(correct) {
+  if (!$('sound-enabled').checked) return;
+  const context = state.audio || new AudioContext(); state.audio = context;
+  const oscillator = context.createOscillator(); const gain = context.createGain();
+  oscillator.frequency.value = correct ? 660 : 190; oscillator.type = 'sine'; gain.gain.value = 0.04;
+  oscillator.connect(gain); gain.connect(context.destination); oscillator.start(); oscillator.stop(context.currentTime + 0.14);
+}
+
+function renderRanking() {
+  const scores = JSON.parse(localStorage.getItem('soyLunaRanking') || '[]');
+  $('ranking-list').innerHTML = scores.length ? scores.slice(0, 5).map((score) => `<li><strong>${score.name}</strong> · ${score.correct}/${score.total} correctas · ${formatTime(score.time)}</li>`).join('') : '<li>Todavía no hay partidas registradas.</li>';
+}
 
 function showScreen(screenId) {
   document.querySelectorAll('.screen').forEach((screen) => { screen.hidden = screen.id !== screenId; });
@@ -59,6 +84,7 @@ function answerQuestion(selectedIndex) {
   buttons.forEach((button) => { button.disabled = true; if (Number(button.dataset.index) === question.answer) button.classList.add('correct'); });
   if (isCorrect) { state.correct += 1; $('feedback').textContent = '¡Correcta! Seguís rodando.'; $('feedback').className = 'feedback correct'; }
   else { state.incorrect += 1; buttons[selectedIndex].classList.add('incorrect'); $('feedback').textContent = `Incorrecta. La respuesta era: ${question.options[question.answer]}`; $('feedback').className = 'feedback incorrect'; updateMistakes(); }
+  playTone(isCorrect);
   setTimeout(() => { if (state.incorrect >= 3 || state.current >= state.questions.length - 1) finishGame(); else { state.current += 1; renderQuestion(); } }, 850);
 }
 
@@ -75,11 +101,16 @@ function finishGame(reason) {
   clearInterval(state.interval); state.interval = null;
   const totalAnswered = state.correct + state.incorrect;
   const rate = totalAnswered ? Math.round((state.correct / totalAnswered) * 100) : 0;
+  const scores = JSON.parse(localStorage.getItem('soyLunaRanking') || '[]');
+  scores.push({ name: state.config.name, correct: state.correct, total: state.questions.length, time: state.elapsed });
+  scores.sort((first, second) => second.correct - first.correct || first.time - second.time);
+  localStorage.setItem('soyLunaRanking', JSON.stringify(scores.slice(0, 10)));
   $('result-name').textContent = state.config.name;
   $('stat-time').textContent = formatTime(state.elapsed);
   $('stat-correct').textContent = state.correct;
   $('stat-incorrect').textContent = state.incorrect;
   $('stat-rate').textContent = `${rate}%`;
+  renderRanking();
   $('result-message').textContent = reason === 'time' ? 'Se terminó el tiempo. ¡La próxima vuelta puede ser todavía mejor!' : state.incorrect >= 3 ? 'Llegaste al límite de 3 respuestas incorrectas. ¡Gracias por jugar!' : 'Completaste todas las preguntas dentro del tiempo. ¡Excelente partida!';
   showScreen('results');
 }
@@ -91,7 +122,9 @@ function startGame(event) {
   if (minutes * 60 + seconds < 10) { $('seconds').setCustomValidity('Elegí al menos 10 segundos.'); $('seconds').reportValidity(); return; }
   $('seconds').setCustomValidity('');
   state.config = { name: $('player-name').value.trim(), count: Number($('question-count').value), totalTime: minutes * 60 + seconds };
-  state.questions = shuffle(questionBank).slice(0, state.config.count);
+  const difficulty = $('difficulty').value;
+  const availableQuestions = difficulty === 'mixed' ? questionBank : questionBank.filter((question) => question.difficulty === difficulty);
+  state.questions = shuffle(availableQuestions.length >= state.config.count ? availableQuestions : questionBank).slice(0, state.config.count);
   state.current = 0; state.correct = 0; state.incorrect = 0; state.elapsed = 0; state.remaining = state.config.totalTime;
   $('player-label').textContent = state.config.name.toUpperCase(); $('timer').querySelector('strong').textContent = formatTime(state.remaining); $('timer').classList.remove('warning'); updateMistakes(); renderQuestion(); showScreen('game');
   state.interval = setInterval(tick, 1000);
