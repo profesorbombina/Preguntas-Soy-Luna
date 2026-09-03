@@ -2,6 +2,10 @@
 
 Trivia de preguntas y respuestas sobre la serie *Soy Luna*.
 
+## Cómo trabajamos
+
+- [Ver infografía del proceso](https://profesorbombina.github.io/Preguntas-Soy-Luna/proceso.html)
+
 ## Versiones publicadas
 
 - [Jugar Versión 1](https://profesorbombina.github.io/Preguntas-Soy-Luna/v1/)
